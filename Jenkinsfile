@@ -8,13 +8,7 @@ pipeline {
         }
         stage('Static Code Analysis') {
             steps {
-                script {
-                    for (folder in ['docs-web', 'docs-core', 'docs-web-common']) {
-                        dir(folder) {
-                            sh 'mvn pmd:pmd'
-                        }
-                    }
-                }
+                sh 'mvn pmd:pmd'
             }
             post {
                 always {
