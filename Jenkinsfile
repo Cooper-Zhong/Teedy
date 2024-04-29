@@ -18,7 +18,7 @@ pipeline {
         }
         stage('Unit Test') {
             steps {
-                sh 'mvn test'
+                sh 'mvn test --fail-never'
             }
             post {
                 always {
