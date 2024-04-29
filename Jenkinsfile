@@ -6,47 +6,30 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
-        stage('Static Code Analysis') {
+        stage('PMD') {
             steps {
                 sh 'mvn pmd:pmd'
             }
-            post {
-                always {
-                    archiveArtifacts artifacts: '**/docs-*/target/pmd.xml', fingerprint: true
-                }
-            }
         }
-        // stage('Unit Test') {
-        //     steps {
-        //         sh 'mvn test --fail-never'
-        //     }
-        //     post {
-        //         always {
-        //             script {
-        //                 junit '**/target/surefire-reports/TEST-*.xml'
-        //             }
-        //         }
-        //     }
-        // }
-
         stage('Generate Javadoc') {
             steps {
-                sh 'mvn javadoc:jar'
-                
+                sh 'mvn javadoc:javadoc'
             }
-            post {
-                always {
-                    archiveArtifacts artifacts: '**/docs-*/target/site/apidocs/**', fingerprint: true
-                }
+        }
+        stage('Run Tests') {
+            steps {
+                sh 'mvn test --fail-never'
             }
         }
     }
-
     post {
         always {
             archiveArtifacts artifacts: '**/target/site/**', fingerprint: true
-            archiveArtifacts artifacts: '**/target/**/*.war', fingerprint: true
             archiveArtifacts artifacts: '**/target/**/*.jar', fingerprint: true
+            archiveArtifacts artifacts: '**/target/**/*.jar', fingerprint: true
+            archiveArtifacts artifacts: '**/target/site/apidocs/**', fingerprint: true
+            // 存档 Surefire 报告
+            archiveArtifacts artifacts: '**/target/surefire-reports/**', fingerprint: true
         }
     }
 }
