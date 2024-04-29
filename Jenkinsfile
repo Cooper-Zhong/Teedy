@@ -6,9 +6,35 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
-        stage('pmd') {
+        stage('Static Code Analysis') {
             steps {
                 sh 'mvn pmd:pmd'
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'target/pmd.xml', fingerprint: true
+                }
+            }
+        }
+        stage('Unit Test') {
+            steps {
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                    archiveArtifacts artifacts: 'target/surefire-reports', fingerprint: true
+                }
+            }
+        }
+        stage('Generate Javadoc') {
+            steps {
+                sh 'mvn javadoc:jar'
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'target/site/apidocs/**', fingerprint: true
+                }
             }
         }
     }
