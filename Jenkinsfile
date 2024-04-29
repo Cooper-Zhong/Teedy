@@ -31,12 +31,12 @@ pipeline {
 
         stage('Generate Javadoc') {
             steps {
-                script {
-                    for (folder in ['docs-web', 'docs-core', 'docs-web-common']) {
-                        dir(folder) {
+                // script {
+                    // for (folder in ['docs-web', 'docs-core', 'docs-web-common']) {
+                        // dir(folder) {
                             sh 'mvn javadoc:jar'
-                        }
-                    }
+                        // }
+                    // }
                 }
             }
             post {
