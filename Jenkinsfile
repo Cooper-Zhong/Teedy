@@ -32,7 +32,7 @@ pipeline {
         stage('Generate Javadoc') {
             steps {
                 sh 'mvn javadoc:jar'
-                }
+                
             }
             post {
                 always {
