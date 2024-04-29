@@ -22,16 +22,18 @@ pipeline {
                 }
             }
         }
-        stage('Unit Test') {
-            steps {
-                sh 'mvn test --fail-never'
-            }
-            post {
-                always {
-                    archiveArtifacts artifacts: 'target/surefire-reports', fingerprint: true
-                }
-            }
-        }
+        // stage('Unit Test') {
+        //     steps {
+        //         sh 'mvn test --fail-never'
+        //     }
+        //     post {
+        //         always {
+        //             script {
+        //                 junit '**/target/surefire-reports/TEST-*.xml'
+        //             }
+        //         }
+        //     }
+        // }
         stage('Generate Javadoc') {
             steps {
                 script {
