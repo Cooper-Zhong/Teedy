@@ -8,17 +8,23 @@ pipeline {
         }
         stage('Static Code Analysis') {
             steps {
-                sh 'mvn pmd:pmd'
+                script {
+                    for (folder in ['docs-web', 'docs-core', 'docs-web-common']) {
+                        dir(folder) {
+                            sh 'mvn pmd:pmd'
+                        }
+                    }
+                }
             }
             post {
                 always {
-                    archiveArtifacts artifacts: 'target/pmd.xml', fingerprint: true
+                    archiveArtifacts artifacts: '**/docs-*/target/pmd.xml', fingerprint: true
                 }
             }
         }
         stage('Unit Test') {
             steps {
-                sh 'mvn test --fail-never'
+                sh 'mvn test'
             }
             post {
                 always {
@@ -29,11 +35,17 @@ pipeline {
         }
         stage('Generate Javadoc') {
             steps {
-                sh 'mvn javadoc:jar'
+                script {
+                    for (folder in ['docs-web', 'docs-core', 'docs-web-common']) {
+                        dir(folder) {
+                            sh 'mvn javadoc:jar'
+                        }
+                    }
+                }
             }
             post {
                 always {
-                    archiveArtifacts artifacts: 'target/site/apidocs/**', fingerprint: true
+                    archiveArtifacts artifacts: '**/docs-*/target/site/apidocs/**', fingerprint: true
                 }
             }
         }
